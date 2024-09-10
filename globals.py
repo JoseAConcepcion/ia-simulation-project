@@ -21,4 +21,5 @@ fighter_actions = Enum("fighter_actions", "moving lin_attacking rot_attacking li
 
 #Debug Controllers
 graph_debug_draw = False
+first_player_destination_debug_draw = False
 

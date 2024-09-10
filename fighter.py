@@ -47,8 +47,18 @@ class Fighter:
         self.max_linear_strength = 100
         self.max_rotation_strength = 40
         self.precision = 0.8     #simpre está entre 0 y 1.    0 = apunta random, no a donde le dices    1 = apunta exactamente en la direccion que le dices
-        self.view_radius = 6
+        self.view_radius = 4
         self.reaction_frequency = 1/0.3  #1/(Cuantos segundos pasan entre llamadas a la funcion de planificacion del agente)
+
+    def add_prop(self, props:list):
+        mass_density, restitution, max_linear_strength, max_rotation_strength, precision, view_radius, reaction_frequency = props
+        self.mass_density = mass_density
+        self.restitution = restitution
+        self.max_linear_strength = max_linear_strength
+        self.max_rotation_strength = max_rotation_strength
+        self.precision = precision
+        self.view_radius = view_radius
+        self.reaction_frequency = reaction_frequency
 
     def add_polygon(self, vetexList):
         self.polygons.append(vetexList)
@@ -68,7 +78,7 @@ class Fighter:
                     new_r = dist
         self.bounding_r = new_r
     
-    def update(self):
+    def update(self, friction_coefficient = 2):
         self.position = self.body.worldCenter
         self.seconds_since_last_plan += dt
         self.seconds_since_last_move_update += dt
@@ -78,7 +88,7 @@ class Fighter:
             self.seconds_since_last_plan = 0
 
         #Frictions
-        self.applyFrictions()
+        self.applyFrictions(friction_coefficient)
 
         #Execute plan
         if self.state == fighter_actions.moving:
@@ -207,9 +217,9 @@ class Fighter:
             torque = torque / math.fabs(torque) * self.max_rotation_strength
         self.body.ApplyTorque(torque=torque, wake=True)
 
-    def applyFrictions(self):
+    def applyFrictions(self, coeficient):
         center = self.body.worldCenter
         v = self.body.linearVelocity
-        self.body.ApplyForce(force=-2*v, point=center, wake=True)
+        self.body.ApplyForce(force=-coeficient*v, point=center, wake=True)
         w = self.body.angularVelocity
-        self.body.ApplyTorque(torque=-2*w, wake=True)
+        self.body.ApplyTorque(torque=-coeficient*w, wake=True)

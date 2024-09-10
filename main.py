@@ -30,7 +30,7 @@ f6 = Fighter([1,-7], 2, physW)
 poly6 = [[0,2], [1,0], [0,1]]
 f6.add_polygon(poly6)
 
-sc = Scene([f1,f2, f3, f4, f5, f6], 10, [rlib.RED, rlib.GREEN, rlib.BLUE], 20, physW, 20, 1)
+sc = Scene([f1,f2, f3, f4, f5, f6], 10, [rlib.RED, rlib.GREEN, rlib.BLUE], 20, physW, 20, 1, friction_coeficient=2)
 
 ###--- Main ---###
 rlib.init_window(800, 800, "Debug View")
@@ -50,7 +50,7 @@ while not rlib.window_should_close():
     if rlib.is_key_pressed(rlib.KeyboardKey.KEY_SPACE):
         show_image = not show_image
     
-    if len(sc.fighters) > 0:
+    if len(sc.fighters) > 0 and first_player_destination_debug_draw:
         meet = sc.fighters[0].destination
         if meet != None:
             rlib.draw_circle(xytc(meet[0], meet[1])[0], xytc(meet[0], meet[1])[1], 20, rlib.RED)

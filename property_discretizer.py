@@ -12,7 +12,7 @@ def discretize_properties_for_HMM(f_self, f_oponent):
         'border_dist2':0,
         'rotation1':0,
         'rotation2':0,
-        #'distance':0
+        'distance':0
     }
     
     mass_diff_limits = [-1, -0.5, 0, 0.5]
@@ -109,11 +109,11 @@ def discretize_properties_for_HMM(f_self, f_oponent):
             break
     
     #Distance
-    #distance = math.sqrt((f_self.position.x-f_oponent.position.x)**2 + (f_self.position.y-f_oponent.position.y)**2)
-    #for i in range(len(dist_limits)):
-    #    if distance < dist_limits[i]-0.5:
-    #        evidences['distance'] = 2-i
-    #        break
+    distance = math.sqrt((f_self.position.x-f_oponent.position.x)**2 + (f_self.position.y-f_oponent.position.y)**2)
+    for i in range(len(dist_limits)):
+        if distance < dist_limits[i]-0.5:
+            evidences['distance'] = 2-i
+            break
 
     return evidences
     

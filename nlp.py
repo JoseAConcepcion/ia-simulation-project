@@ -9,7 +9,7 @@ def event_log_to_text(event_log):
         
         text += f"{round(e.t, 2)}s - "
         if isinstance(e, DeathEvent):
-            text += f"Player {e.fighter_id} from team {e.team_id} lost!"
+            text += f"Player {e.fighter_id} (from team {e.team_id}) lost!"
             if e.team_lost:
                 text += f" This means team {e.team_id} is out of the competition!"
             text += "\n"

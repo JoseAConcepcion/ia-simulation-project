@@ -21,7 +21,7 @@ class HMM:
         self.states = ['Attacking', 'Moving', 'Fleing', 'Flanking', 'Moving Away From Border', 'Waiting']
 
         # Change str_difference for restitution difference
-        self.evidences = ['mass_difference', 'restitution_difference', 'dir1','dir2','speed1','speed2','border_dist1','border_dist2','rotation1','rotation2']
+        self.evidences = ['mass_difference', 'restitution_difference', 'dir1','dir2','speed1','speed2','border_dist1','border_dist2','rotation1','rotation2','distance']
         self.init_states_prob = np.array([1/6,1/6,1/6,1/6,1/6,1/6])
         self.transition_model = np.array([[3/8,1/8,1/8,1/8,1/8,1/8],
                                     [1/8,3/8,1/8,1/8,1/8,1/8],
@@ -39,7 +39,8 @@ class HMM:
             'border_dist1':[1/3,1/3,1/3],
             'border_dist2':[1/3,1/3,1/3],
             'rotation1':[1/3,1/3,1/3],
-            'rotation2':[1/3,1/3,1/3]
+            'rotation2':[1/3,1/3,1/3],
+            'distance':[1/3,1/3,1/3]
         }
 
         # Fix these values
@@ -50,7 +51,8 @@ class HMM:
             'speed2':[0.8,0.15,0.05],
             'dir2':[0.8,0.15,0.05],
             'border_dist1':[0.5,0.25,0.25],
-            'rotation2': [1/3, 1/3, 1/3]
+            'rotation2': [1/3, 1/3, 1/3],
+            'distance':[0.5,0.25,0.25]
         },
             'Moving':{
             'speed2':[1/4,1/2,1/4],
@@ -61,7 +63,8 @@ class HMM:
             'restitution_difference':[0.02,0.08,0.1,0.3,0.5],
             'speed1':[0.8,0.15,0.05],
             'dir1':[0.8,0.15,0.05],
-            'rotation1':[1/3,1/3,1/3]
+            'rotation1':[1/3,1/3,1/3],
+            'distance':[0.25,0.25,0.5]
         },
             'Flanking':{
             'speed2':[1/4,1/2,1/4],

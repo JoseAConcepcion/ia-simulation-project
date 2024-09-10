@@ -16,9 +16,12 @@ class RobotDecisionMaker:
     def make_decision_standard(self, robot_state, other_robots, belief_state):
         
         #--- Emergencias ---#
-        if robot_state.distance_from_border < 1.5:
+        if robot_state.distance_from_border < 1:
             self.state = plan_state.getting_far_from_border
             self.destination = (0,0)
+            return fighter_actions.lin_attacking, (0,0)
+
+        if self.state == plan_state.getting_far_from_border and robot_state.distance_from_border < 1.5:
             return fighter_actions.lin_attacking, (0,0)
 
         #--- Que se mantenga ejecutando el plan actual si le conviene ---#
@@ -56,13 +59,14 @@ class RobotDecisionMaker:
             oponent_refs.append(oponent_ref)
             probs.append(hmm.forward(discretize_properties_for_HMM(robot_state, oponent_ref)))
         
+        #Esquivar
         for i in range(len(probs)):
             oponent_ref = oponent_refs[i]
             if probs[i][0] > 0.8 and oponent_ref.team_id != robot_state.team_id:
                 self.state = plan_state.avoiding
                 perp_vel = (oponent_ref.body.linearVelocity.y, -oponent_ref.body.linearVelocity.x)
                 perp_vel_abs = math.sqrt(perp_vel[0]**2 + perp_vel[1]**2)
-                perp_vel_norm = (2*perp_vel[0]/perp_vel_abs, 2*perp_vel[1]/perp_vel_abs)
+                perp_vel_norm = (1*perp_vel[0]/perp_vel_abs, 1*perp_vel[1]/perp_vel_abs)
                 self.destination = (robot_state.position.x + perp_vel_norm[0], robot_state.position.y + perp_vel_norm[1])
                 return fighter_actions.lin_attacking, self.destination
         
@@ -86,16 +90,19 @@ class RobotDecisionMaker:
 
     def make_decision_paranoic(self, robot_state, other_robots, belief_state):
         #--- Seguridad ---#
-        if robot_state.distance_from_border < 3:
+        if robot_state.distance_from_border < 2:
             self.state = plan_state.getting_far_from_border
             self.destination = (0,0)
+            return fighter_actions.lin_attacking, (0,0)
+
+        if self.state == plan_state.getting_far_from_border and robot_state.distance_from_border < 3:
             return fighter_actions.lin_attacking, (0,0)
 
         if self.state == plan_state.running_to_center and math.sqrt(robot_state.position.x**2+robot_state.position.y**2) > 1:
             return fighter_actions.moving, (0,0)
 
         if self.state == plan_state.rot_defense:
-            if self.time_in_rot_defense < 5:
+            if self.time_in_rot_defense < 4:
                 self.time_in_rot_defense += 1/robot_state.reaction_frequency
                 return fighter_actions.lin_rot_attacking, self.destination
             else:
@@ -179,10 +186,20 @@ class RobotDecisionMaker:
         self.destination = (random.random(),random.random())
         return fighter_actions.moving, self.destination
     
+
+
+
+
+
     def make_decision_planifier(self, robot_state, other_robots, belief_state):
         
         #Emergencia
-        if robot_state.distance_from_border < 2:
+        if robot_state.distance_from_border < 1:
+            self.state = plan_state.getting_far_from_border
+            self.destination = (0,0)
+            return fighter_actions.lin_attacking, (0,0)
+
+        if self.state == plan_state.getting_far_from_border and robot_state.distance_from_border < 2:
             return fighter_actions.lin_attacking, (0,0)
 
         #Inferencia
@@ -228,7 +245,7 @@ class RobotDecisionMaker:
                     f_oponent = f
                     break
 
-            if f_oponent != None and self.time_in_two_phase_charge_phase_2 < 2:
+            if f_oponent != None and self.time_in_two_phase_charge_phase_2 < 3:
                 self.destination = (f_oponent.position.x, f_oponent.position.y)
                 return fighter_actions.lin_rot_attacking, self.destination
 

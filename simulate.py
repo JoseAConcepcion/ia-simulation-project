@@ -3,7 +3,7 @@ from globals import *
 
 ###--- Debug Window Init ---###
 rlib.init_window(800, 800, "Debug View")
-show_image = False
+show_image = True
 if show_image: rlib.set_target_fps(frames_that_are_a_second)
 else: rlib.set_target_fps(3000000)
 

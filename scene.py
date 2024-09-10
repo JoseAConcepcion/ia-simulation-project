@@ -54,11 +54,12 @@ class Path_Graph_Node:
 #--- Scene ---#
 scene_states = Enum("scene_states", "in_process winner draw")
 class Scene:
-    def __init__(self, fighters: Fighter, field_initial_r: float, team_colors, graph_axial_count, physicsWorld, seconds_to_start_shrinking_r = 3, r_shrink_velocity = 0.3):
+    def __init__(self, fighters: Fighter, field_initial_r: float, team_colors, graph_axial_count, physicsWorld, seconds_to_start_shrinking_r = 3, r_shrink_velocity = 0.3, friction_coeficient = 2):
         self.fighters = fighters
         self.field_r = field_initial_r
 
         self.physicsWorld = physicsWorld
+        self.friction_coeficient = friction_coeficient
 
         self.state = scene_states.in_process
         self.graph_axial_count = graph_axial_count
@@ -122,7 +123,7 @@ class Scene:
         #Update Fighters
         for f in self.fighters:
             f.path_graph = self.graph
-            f.update()
+            f.update(self.friction_coeficient)
             f.distance_from_border = self.field_r-math.sqrt(f.position.x**2 + f.position.y**2)
             f.fighters_in_sight = []
             for f_2 in self.fighters:
@@ -130,6 +131,7 @@ class Scene:
                     continue
                 if (f.position.x-f_2.position.x)**2 + (f.position.y-f_2.position.y)**2 <= f.view_radius**2:
                     f.fighters_in_sight.append(f_2)
+            random.shuffle(f.fighters_in_sight)
 
         #Update World
         self.physicsWorld.Step(dt, 10, 10)
