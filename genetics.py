@@ -88,7 +88,7 @@ def generate_init_team(rows,cols,weights,max_sum_c):
     return matrix
 def procs(rows,cols,weights,max_sum_c,number_of_matrix, iter_per_matrix,
           team1, team2, mutation_rate, number_of_generations,initial_pos, team_colors,
-          team1_pos, team2_pos, wins_umbral):
+          team1_pos, team2_pos):
 
     matrixs  = []
     history = {
@@ -124,10 +124,10 @@ def procs(rows,cols,weights,max_sum_c,number_of_matrix, iter_per_matrix,
             })
             generation_score += matrix[1]
             generation_win_rate += matrix[2]
-            if wins_rate/iter_per_matrix >=wins_umbral:
-                best = matrix.copy()
-                found_top = True
-                break
+            # if wins_rate/iter_per_matrix >=0.9:
+            #     best = matrix.copy()
+            #     found_top = True
+            #     break
         #     print(f'Team structure: {matrix}\n'
         #           f'Generation: {gen}\n'
         #           f'Average score: {matrix[1]}\n'

@@ -7,17 +7,17 @@ from property_discretizer import *
 physW = world(gravity=(0, 0))
 
 f1 = Fighter([-5,4], 0, physW, fighter_null_personality)
+f1.max_linear_strength = 50
+f1.precision = 1
+f1.reaction_frequency = 1/0.01
 poly1 = [[0,1], [-1,0], [1,0]]
 f1.add_polygon(poly1)
 
-f3 = Fighter([5,4], 1, physW, fighter_trick_personality)
-f3.reaction_frequency = 1/0.01
-f3.view_radius = 10
-f3.precision = 1
-poly3 = [[0,1], [1,0], [0,0]]
-f3.add_polygon(poly3)
+f2 = Fighter([-1,0], 1, physW, fighter_null_personality)
+poly2 = [[0,1], [-0.5,0], [1,0]]
+f2.add_polygon(poly2)
 
-sc = Scene([f1, f3], 10, [rlib.RED, rlib.GREEN, rlib.BLUE], 20, physW, 2000, 1, friction_coeficient=2)
+sc = Scene([f1,f2], 10, [rlib.RED, rlib.GREEN], 20, physW, 200, 1, friction_coeficient=2)
 
 ###--- Main ---###
 rlib.init_window(800, 800, "Debug View")
@@ -29,7 +29,7 @@ while not rlib.window_should_close():
     basic_controls()
 
     if rlib.is_mouse_button_pressed(0) and len(sc.fighters) > 0:
-        sc.fighters[0].state = fighter_actions.lin_rot_attacking
+        sc.fighters[0].state = fighter_actions.moving
         sc.fighters[0].destination = xytm(rlib.get_mouse_x(), rlib.get_mouse_y())
     if rlib.is_mouse_button_pressed(1) and len(sc.fighters) > 0:
         sc.fighters[0].state = fighter_actions.braking

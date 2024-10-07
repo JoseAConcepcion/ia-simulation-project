@@ -269,10 +269,10 @@ class RobotDecisionMaker:
         #Iniciar ataque principal o secundario
         for f in other_robots:
             if f.team_id != robot_state.team_id:
-                if robot_state.distance_from_border > 3:
-                    oponent_to_self_raw = (robot_state.position.x-f.position.x, robot_state.position.y-f.position.y)
-                    oponent_to_self_abs = math.sqrt(oponent_to_self_raw[0]**2+oponent_to_self_raw[1]**2)
-                    dst = 0.9
+                oponent_to_self_raw = (robot_state.position.x-f.position.x, robot_state.position.y-f.position.y)
+                oponent_to_self_abs = math.sqrt(oponent_to_self_raw[0]**2+oponent_to_self_raw[1]**2)
+                if robot_state.distance_from_border > 3 and oponent_to_self_abs < 5:
+                    dst = 1.5
                     oponent_to_self_corr = (oponent_to_self_raw[0]/oponent_to_self_abs * dst, oponent_to_self_raw[1]/oponent_to_self_abs * dst)
 
                     self.locked_in_robot_id = f.id
@@ -299,8 +299,42 @@ class RobotDecisionMaker:
         return fighter_actions.moving, self.destination
 
 
+    def make_decision_avoider_demo(self, robot_state, other_robots, belief_state):
+        
+        if self.state == plan_state.avoiding and math.sqrt((self.destination[0]-robot_state.position.x)**2 + (self.destination[1]-robot_state.position.y)**2) > 0.2:
+            return fighter_actions.lin_attacking, self.destination
+        
+        probs = []
+        oponent_refs = []
+        for id,hmm in belief_state.items():
+            if id == robot_state.id: continue
+            
+            oponent_ref = None
+            for f_other in other_robots:
+                if f_other.id == id:
+                    oponent_ref = f_other
+                    break
+            
+            oponent_refs.append(oponent_ref)
+            probs.append(hmm.forward(discretize_properties_for_HMM(robot_state, oponent_ref)))
+        
+        for i in range(len(probs)):
+            oponent_ref = oponent_refs[i]
+            if probs[i][0] > 0.8 and oponent_ref.team_id != robot_state.team_id:
+                print("a")
+                self.state = plan_state.avoiding
+                perp_vel = (oponent_ref.body.linearVelocity.y, -oponent_ref.body.linearVelocity.x)
+                perp_vel_abs = math.sqrt(perp_vel[0]**2 + perp_vel[1]**2)
+                perp_vel_norm = (1*perp_vel[0]/perp_vel_abs, 1*perp_vel[1]/perp_vel_abs)
+                self.destination = (robot_state.position.x + perp_vel_norm[0], robot_state.position.y + perp_vel_norm[1])
+                return fighter_actions.lin_attacking, self.destination
+        
+        self.state = plan_state.braking
+        return fighter_actions.braking, self.destination
 
 
+    def make_decision_two_phase_demo(self, robot_state, other_robots, belief_state):
+        pass
 
     def make_decision_experimental(self, robot_state, other_robots, belief_state):
         pass

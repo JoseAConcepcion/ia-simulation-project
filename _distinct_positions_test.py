@@ -11,10 +11,9 @@ from simulate import *
 #self.view_radius = 4
 #self.reaction_frequency = 1/0.3
 
-
 total_victories = 0
 victories = [0,0,0]
-while total_victories < 100:
+while total_victories < 300:
 
     #Create Team
     physW = world(gravity=(0, 0))

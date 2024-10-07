@@ -37,7 +37,7 @@ class Fighter:
         self.distance_from_border = 1000
         self.fighters_in_sight = []
         
-        #Desires
+        #Intentions
         self.state = fighter_actions.braking #La accion actual. Una de 'fighter_actions'
         self.destination = None #A dónde está caminando o atacando
 

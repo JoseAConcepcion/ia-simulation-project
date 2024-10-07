@@ -10,7 +10,7 @@ f1 = Fighter([-5,4], 0, physW, fighter_null_personality)
 poly1 = [[0,1], [-1,0], [1,0]]
 f1.add_polygon(poly1)
 
-f3 = Fighter([5,4], 1, physW, fighter_trick_personality)
+f3 = Fighter([5,4], 1, physW, fighter_planifier_personality)
 f3.reaction_frequency = 1/0.01
 f3.view_radius = 10
 f3.precision = 1

@@ -8,16 +8,25 @@ physW = world(gravity=(0, 0))
 
 f1 = Fighter([-5,4], 0, physW, fighter_null_personality)
 poly1 = [[0,1], [-1,0], [1,0]]
+f1.mass_density = 20000
+f1.restitution = 1
 f1.add_polygon(poly1)
 
-f3 = Fighter([5,4], 1, physW, fighter_trick_personality)
+f2 = Fighter([0,0], 0, physW, fighter_null_personality)
+f2.mass_density = 20000
+f2.restitution = 1
+f2.add_polygon(poly1)
+
+f3 = Fighter([5,4], 1, physW, fighter_undecided_personality)
 f3.reaction_frequency = 1/0.01
 f3.view_radius = 10
 f3.precision = 1
+f3.restitution = 1
 poly3 = [[0,1], [1,0], [0,0]]
 f3.add_polygon(poly3)
 
-sc = Scene([f1, f3], 10, [rlib.RED, rlib.GREEN, rlib.BLUE], 20, physW, 2000, 1, friction_coeficient=2)
+
+sc = Scene([f1, f2, f3], 10, [rlib.RED, rlib.GREEN, rlib.BLUE], 20, physW, 2000, 1, friction_coeficient=2)
 
 ###--- Main ---###
 rlib.init_window(800, 800, "Debug View")
